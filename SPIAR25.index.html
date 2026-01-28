@@ -1,0 +1,1286 @@
+ <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Guida Terapia Antibiotica Empirica - AUSL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: var(--light);
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 0.75rem 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--dark);
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .content {
+            padding: 1rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .subsection-title {
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin: 1rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .card-header {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .therapy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .therapy-table thead,
+        .therapy-table tbody {
+            display: table;
+            width: 100%;
+        }
+
+        .therapy-table th,
+        .therapy-table td {
+            padding: 0.6rem;
+            text-align: left;
+            border: 1px solid var(--border);
+        }
+
+        .therapy-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .therapy-table tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning);
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .danger-box {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger);
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .key-message {
+            background: #f0fdf4;
+            border-left: 4px solid var(--secondary);
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .key-message h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .key-message ul {
+            margin-left: 1.25rem;
+        }
+
+        .key-message li {
+            margin: 0.4rem 0;
+        }
+
+        .calculator {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 0.75rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.65rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: white;
+            border: 2px solid var(--border);
+        }
+
+        .result h3 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .accordion-item {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 0.85rem;
+            background: var(--light);
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .accordion-header:hover {
+            background: #e0e7ff;
+        }
+
+        .accordion-header.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 0.85rem;
+        }
+
+        .accordion-content.active {
+            display: block;
+        }
+
+        .checkbox-group {
+            margin: 0.75rem 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.65rem;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            min-width: 18px;
+            width: 18px;
+            height: 18px;
+            margin-right: 0.65rem;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .search-box {
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.85rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .score-result {
+            font-size: 1.75rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 0.85rem;
+            border-radius: 12px;
+            margin: 0.75rem 0;
+        }
+
+        .score-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .score-medium {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .score-high {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .drug-info {
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            border-left: 4px solid var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .drug-info strong {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .header h1 {
+                font-size: 1.25rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+            }
+
+            .content {
+                padding: 0.75rem;
+                max-height: calc(100vh - 160px);
+            }
+
+            .nav-tab {
+                font-size: 0.75rem;
+                padding: 0.6rem 0.4rem;
+                min-width: 90px;
+            }
+
+            .therapy-table {
+                font-size: 0.75rem;
+            }
+
+            .therapy-table th,
+            .therapy-table td {
+                padding: 0.4rem;
+            }
+
+            .section-title {
+                font-size: 1.15rem;
+            }
+
+            .subsection-title {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Guida Terapia Antibiotica Empirica</h1>
+            <p>AUSL Romagna - Schemi per tipo di patologia</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('infezioni')">Infezioni</button>
+            <button class="nav-tab" onclick="showTab('score')">NEWS2</button>
+            <button class="nav-tab" onclick="showTab('fattori')">Fattori Rischio</button>
+            <button class="nav-tab" onclick="showTab('allergie')">Allergie</button>
+            <button class="nav-tab" onclick="showTab('farmaci')">Info Farmaci</button>
+        </div>
+
+        <div class="content">
+            <!-- TAB INFEZIONI -->
+            <div id="infezioni" class="tab-content active">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInfection" placeholder="🔍 Cerca infezione..." onkeyup="filterInfections()">
+                </div>
+
+                <div class="accordion" id="infectionsAccordion">
+                    <!-- VIE URINARIE -->
+                    <div class="accordion-item infection-item" data-infection="urinarie cistite pielonefrite orchiepididimite prostatite sepsi catetere">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>🩺 1. Infezioni Vie Urinarie</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="subsection-title">1.1 Cistite</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Condizione</th><th>1° Scelta</th><th>2° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Senza FdR compl.</strong></td>
+                                        <td>Nitrofurantoina 100mg po q6h</td>
+                                        <td>Fosfomicina 3g po unica</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Con FdR compl.</strong></td>
+                                        <td>Attendere ATB. Se necessario: Fosfomicina 3g (donna unica; uomo q24h×2)</td>
+                                        <td>TMP/SMX 1cp q12h</td>
+                                        <td>7gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="subsection-title">1.2 Pielonefrite/IVU febbrili</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Condizione</th><th>1° Scelta</th><th>2° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Senza FdR</strong></td>
+                                        <td>Ceftriaxone 2g q24h</td>
+                                        <td>Amikacina 15mg/kg q24h (5gg) o Cipro 500mg q12h o Levo 750mg q24h</td>
+                                        <td>7gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Con FdR</strong></td>
+                                        <td>Pip/Taz 4,5g q6h<br>ESBL+ 6mesi: Mero 1g q8h</td>
+                                        <td>Amikacina 15mg/kg q24h (5gg) o Fosfomicina 4g q6h</td>
+                                        <td>7gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="subsection-title">1.3 Sepsi urinaria</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Condizione</th><th>1° Scelta</th><th>2° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Senza FdR MDROs</strong></td>
+                                        <td>Pip/Taz 4,5g q6h</td>
+                                        <td>Ceftriaxone 2g q24h + Amika 15mg/kg q24h o Cipro 400mg q8h + Amika</td>
+                                        <td>7-10gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Con FdR MDROs</strong></td>
+                                        <td>Mero 1g q8h</td>
+                                        <td>Basso rischio: mant. Alto rischio: Aztreo 2g q8h + Amika 15mg/kg q24h</td>
+                                        <td>7-10gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="key-message">
+                                <h4>MESSAGGI CHIAVE:</h4>
+                                <ul>
+                                    <li>Sempre urinocoltura ed esame urine prima ATB</li>
+                                    <li>Emocolture solo se sepsi (NEWS2>5) o ATB già iniziata</li>
+                                    <li>De-escalation con ATB: preferire TMP/SMX o amox/clav</li>
+                                    <li>ESBL+ con buona risposta: Pip/Taz per MIC≤4</li>
+                                    <li>Calcoli con idronefrosi: visita urologica urgente</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- INTRADDOMINALI -->
+                    <div class="accordion-item infection-item" data-infection="addominali colangite colecistite diverticolite peritonite pancreatite clostridium">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>🏥 2. Infezioni Intraddominali</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="subsection-title">2.1 Colangite/Colecistite</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Condizione</th><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Senza FdR ESBL+ e NEWS2<5</strong></td>
+                                        <td>Ceftriaxone 2g q24h + Metronidazolo 500mg q8h</td>
+                                        <td>5-7gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Con FdR ESBL+ o NEWS2≥5</strong></td>
+                                        <td>Pip/Taz 4,5g q6h</td>
+                                        <td>5-7gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="subsection-title">2.2 Diverticolite non complicata</div>
+                            <div class="info-box">Non complicata = TC senza perforazione/fistola/ascesso</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Condizione</th><th>Terapia</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Senza FdR ESBL+</strong></td>
+                                        <td>NO TERAPIA o Amox/clav 1g q8h</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Con FdR ESBL+</strong></td>
+                                        <td>NO TERAPIA o Pip/Taz 4,5g q6h</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="warning-box">RCT: ATB non migliore di osservazione. Se complicata: contattare chirurgo</div>
+
+                            <div class="subsection-title">2.3 Peritonite primaria</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Condizione</th><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Senza FdR ESBL+</strong></td>
+                                        <td>Ceftriaxone 2g q24h</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Con FdR ESBL+</strong></td>
+                                        <td>Pip/Taz 4,5g q6h</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="info-box">Diagnosi: 250 neutrofili/mmc su liquido ascitico. Ripetere paracentesi a 48h</div>
+
+                            <div class="subsection-title">2.6 C. difficile</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Episodio</th><th>Terapia</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Primo</strong></td>
+                                        <td>Vancomicina po 125mg q6h</td>
+                                        <td>10gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Fulminante</strong></td>
+                                        <td>Vanco po 125mg q6h (SNG) + Metro 500mg ev q8h</td>
+                                        <td>10gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Recidiva</strong></td>
+                                        <td>Vanco taper/pulse (schema complesso)</td>
+                                        <td>Variabile</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="key-message">
+                                <h4>CHIAVE:</h4>
+                                <ul>
+                                    <li>Test solo se >3 scariche acquose/24h</li>
+                                    <li>Sospendere ATB e IPP se possibile</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- POLMONARI -->
+                    <div class="accordion-item infection-item" data-infection="polmonari bpco polmonite cap hap aspirazione">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>🫁 3. Infezioni Polmonari</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="subsection-title">3.1 BPCO riacutizzata</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Gravità</th><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>LIEVE</strong></td><td>NO TERAPIA</td><td>-</td></tr>
+                                    <tr><td><strong>MODERATA</strong></td><td>Amox/clav po 1g q8h</td><td>5gg</td></tr>
+                                    <tr><td><strong>SEVERA</strong></td><td>Pip/Taz ev 4,5g q6h</td><td>5gg</td></tr>
+                                </tbody>
+                            </table>
+
+                            <div class="subsection-title">3.2 Polmonite comunitaria (CAP)</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>CURB65</th><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>0-2 senza comorbidità</strong></td>
+                                        <td>Amoxicillina po 1g q8h</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>0-2 con comorbidità</strong></td>
+                                        <td>Amox/clav 1g q8h (+ Azitro se Leg+)</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>3-5</strong></td>
+                                        <td>Ceftriaxone 2g q24h + Azitro 500mg q24h</td>
+                                        <td>5gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="key-message">
+                                <h4>CHIAVE:</h4>
+                                <ul>
+                                    <li>Applicare CURB65. Ag Legionella solo se CURB≥3</li>
+                                    <li>Emocolture solo se CURB>3 o NEWS2≥5</li>
+                                    <li>Tampone COVID e influenza</li>
+                                </ul>
+                            </div>
+
+                            <div class="subsection-title">3.4 HAP</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>NEWS2</th><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong><5</strong></td>
+                                        <td>Pip/Taz 4,5g q6h</td>
+                                        <td>5-7gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>≥5</strong></td>
+                                        <td>Mero 1g q8h + Azitro 500mg q24h + Linezolid 600mg q12h</td>
+                                        <td>5-7gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- CUTE E TESSUTI MOLLI -->
+                    <div class="accordion-item infection-item" data-infection="cute tessuti cellulite erisipela ascesso ulcere fascite">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>🩹 4. Cute e Tessuti Molli</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="subsection-title">4.1 Cellulite/Erisipela</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Gravità</th><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>LIEVE/MODERATO</strong></td>
+                                        <td>Amox/clav po 1g q8h</td>
+                                        <td>5-7gg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SEVERO</strong></td>
+                                        <td>Pip/Taz 4,5g q6h + Linezolid 600mg q12h</td>
+                                        <td>Variabile</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="subsection-title">4.2 Ascesso</div>
+                            <div class="warning-box">⚠️ Eseguire drenaggio!</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Gravità</th><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>LIEVE</strong></td><td>TMP/SMX 1cp q12h</td><td>5-7gg</td></tr>
+                                    <tr><td><strong>MOD/SEV</strong></td><td>Pip/Taz 4,5g q6h + Linezolid 600mg q12h</td><td>7-10gg</td></tr>
+                                </tbody>
+                            </table>
+
+                            <div class="subsection-title">4.4 Fascite necrotizzante</div>
+                            <div class="danger-box">⚠️ EMERGENZA CHIRURGICA! LRINEC>6 = forte sospetto</div>
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>1° Scelta</th><th>Durata</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mero 1g q8h + Dapto 8-10mg/kg q24h + Clinda 600mg q6h</td>
+                                        <td>7-10gg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SEPSI -->
+                    <div class="accordion-item infection-item" data-infection="sepsi febbre origine sconosciuta shock settico">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>🌡️ 5. Sepsi Origine Non Nota</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>Condizione</th><th>1° Scelta</th><th>Note</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>NO FdR MDROs</strong></td>
+                                        <td>Pip/Taz 4,5g q6h</td>
+                                        <td rowspan="4">Durata variabile. Rivalutare a 48h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FdR ESBL+</strong></td>
+                                        <td>Mero 1g q8h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FdR MRSA</strong></td>
+                                        <td>+ Vanco 20-30mg/Kg carico poi 15-20mg q12h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FdR Candida</strong></td>
+                                        <td>+ Caspofungina 70mg carico poi 50mg q24h</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="key-message">
+                                <h4>CHIAVE:</h4>
+                                <ul>
+                                    <li>Emocolture + urinocolture SEMPRE prima ATB</li>
+                                    <li>EGA con lattati, CV, riempimento volemico, O2</li>
+                                    <li>Se candidemia: valutazione infettivologica, beta-D-glucano</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CVC -->
+                    <div class="accordion-item infection-item" data-infection="cvc picc port catetere device febbre">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>💉 6. Febbre con CVC/PICC/Port</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <table class="therapy-table">
+                                <thead>
+                                    <tr><th>NEWS2</th><th>1° Scelta</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong><5</strong></td>
+                                        <td>Vanco 20-30mg/Kg carico poi 15-20mg q12h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>≥5</strong></td>
+                                        <td>Vanco + Mero 1g q8h + Caspof 70mg carico poi 50mg q24h</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="key-message">
+                                <h4>CHIAVE:</h4>
+                                <ul>
+                                    <li>1 set emocolture da ogni lume + 2 sets periferici</li>
+                                    <li>Se NEWS2≥5: emoFAST, beta-D-glucano</li>
+                                    <li>BSI device-relata: device va rimosso</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB SCORE NEWS2 -->
+            <div id="score" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title">Calcolatore NEWS2</h2>
+                    <div class="info-box">
+                        Score per stratificare gravità clinica in pazienti con infezione. Stratificazione: NEWS2<5 (non severo) vs NEWS2≥5 (severo)
+                    </div>
+
+                    <div class="calculator">
+                        <form id="news2Form">
+                            <div class="form-group">
+                                <label class="form-label">1. FR (atti/min)</label>
+                                <select class="form-select" id="respRate" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="3">≤8</option>
+                                    <option value="1">9-11</option>
+                                    <option value="0">12-20</option>
+                                    <option value="2">21-24</option>
+                                    <option value="3">≥25</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">2. SpO₂ (%)</label>
+                                <select class="form-select" id="spo2" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="3">≤91</option>
+                                    <option value="2">92-93</option>
+                                    <option value="1">94-95</option>
+                                    <option value="0">≥96</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">3. O₂ terapia</label>
+                                <select class="form-select" id="o2therapy" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="2">Sì</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">4. PA sist. (mmHg)</label>
+                                <select class="form-select" id="sysBP" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="3">≤90</option>
+                                    <option value="2">91-100</option>
+                                    <option value="1">101-110</option>
+                                    <option value="0">111-219</option>
+                                    <option value="3">≥220</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">5. FC (bpm)</label>
+                                <select class="form-select" id="heartRate" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="3">≤40</option>
+                                    <option value="1">41-50</option>
+                                    <option value="0">51-90</option>
+                                    <option value="1">91-110</option>
+                                    <option value="2">111-130</option>
+                                    <option value="3">≥131</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">6. Coscienza</label>
+                                <select class="form-select" id="consciousness" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="0">Vigile</option>
+                                    <option value="3">Confuso/Letargico</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">7. Temp. (°C)</label>
+                                <select class="form-select" id="temp" required>
+                                    <option value="">Seleziona...</option>
+                                    <option value="3">≤35.0</option>
+                                    <option value="1">35.1-36.0</option>
+                                    <option value="0">36.1-38.0</option>
+                                    <option value="1">38.1-39.0</option>
+                                    <option value="2">≥39.1</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">📊 Calcola</button>
+                        </form>
+
+                        <div id="news2Result" class="result" style="display:none;">
+                            <h3>Risultato:</h3>
+                            <div id="scoreDisplay" class="score-result"></div>
+                            <div id="scoreInterpretation"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB FATTORI RISCHIO -->
+            <div id="fattori" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title">Fattori di Rischio</h2>
+
+                    <div class="card">
+                        <div class="card-header">🦠 MRSA</div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-mrsa">
+                                <span>ATB ev/ospedalizzazione ultimi 90gg</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-mrsa">
+                                <span>CVC o dialisi</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-mrsa">
+                                <span>Colonizzato/infezione pregressa MRSA</span>
+                            </label>
+                        </div>
+                        <div id="result-mrsa" style="display:none;" class="warning-box">
+                            ⚠️ PAZIENTE A RISCHIO MRSA - Considerare copertura empirica
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">🔬 ESBL+</div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-esbl">
+                                <span>ATB ev/ospedalizzazione ultimi 90gg</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-esbl">
+                                <span>CVC o dialisi</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-esbl">
+                                <span>Catetere vescicale</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-esbl">
+                                <span>Colonizzato/infezione pregressa ESBL+</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-esbl">
+                                <span>Strutture protette/lungodegenze</span>
+                            </label>
+                        </div>
+                        <div id="result-esbl" style="display:none;" class="warning-box">
+                            ⚠️ PAZIENTE A RISCHIO ESBL+ - Considerare copertura empirica
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">🧬 Pseudomonas MDR</div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-pseudo">
+                                <span>Neutropenia/neoplasia/immunosoppressione</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-pseudo">
+                                <span>Bronchiectasie/FC/BPCO frequenti riacutizzazioni</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-pseudo">
+                                <span>BAL MDR ultimi 90gg</span>
+                            </label>
+                        </div>
+                        <div id="result-pseudo" style="display:none;" class="warning-box">
+                            ⚠️ RISCHIO PSEUDOMONAS MDR - Copertura empirica
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">🍄 Candida</div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-candida">
+                                <span>Nutrizione parenterale</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-candida">
+                                <span>Chirurgia addominale ultimi 30gg</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-candida">
+                                <span>CVC</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="risk-candida">
+                                <span>Neutropenia/neoplasia/immunosoppressione</span>
+                            </label>
+                        </div>
+                        <div id="result-candida" style="display:none;" class="warning-box">
+                            ⚠️ RISCHIO CANDIDA - Considerare antifungini
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB ALLERGIE -->
+            <div id="allergie" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title">Allergie Beta-Lattamici</h2>
+
+                    <div class="info-box">
+                        <10% allergie penicillina riferite sono confermate. Etichette allergia → uso inappropriato ATB → resistenze
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Cross-reattività</div>
+                        <ul>
+                            <li><strong>Vecchie aminocefalosporine</strong> (cefaclor, cefalexina): 15% cross-reattività con ampicillina/amoxicillina</li>
+                            <li><strong>Nuove cefalosporine</strong>: 2% cross-reattività</li>
+                            <li>Cefalosporine a catena laterale R1 differente: OK in allergia penicilline</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Stratificazione Rischio</div>
+                        <div class="subsection-title">Reazioni Immediate</div>
+                        <table class="therapy-table">
+                            <thead>
+                                <tr><th>Basso</th><th>Moderato</th><th>Severo</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Prurito, GI, orticaria persistente, broncospasmo</td>
+                                    <td>Eritema, orticaria <1gg, angioedema</td>
+                                    <td>Angioedema laringe, orticaria 1-1-1, anafilassi, ipotensione</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="subsection-title">Reazioni Ritardate</div>
+                        <table class="therapy-table">
+                            <thead>
+                                <tr><th>Basso</th><th>Moderato</th><th>Severo</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Orticaria >1gg, esantema palmare, maculo-papulare lieve</td>
+                                    <td>Maculo-papulare mod, angioedema, eritema fisso, SDRIFE</td>
+                                    <td>SCAR (SJC, NET, DRESS, AGEP), maculo-papulare severo, danno organo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Delabeling</div>
+                        <ul>
+                            <li><strong>Basso rischio:</strong> Somministrazione diretta o test cutanei+challenge</li>
+                            <li><strong>Moderato:</strong> Test cutanei+challenge o test+RAST+challenge</li>
+                            <li><strong>Severo:</strong> Test cutanei+RAST+challenge. Valutazione allergologica</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB FARMACI -->
+            <div id="farmaci" class="tab-content">
+                <div class="section">
+                    <h2 class="section-title">Info Farmaci</h2>
+
+                    <div class="card">
+                        <div class="card-header">💊 Beta-Lattamici</div>
+                        <div class="warning-box">
+                            <strong>NEWS2≥5:</strong> dose carico + infusione estesa (3-4h). Pazienti stabili: NO evidenze solide
+                        </div>
+                        <table class="therapy-table">
+                            <thead>
+                                <tr><th>Farmaco</th><th>Carico</th><th>Mantenimento</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Amox/clav</td><td>1,2g in 30'</td><td>1,2g q8h in 3h</td></tr>
+                                <tr><td>Pip/Taz</td><td>6,75-9g in 30'</td><td>4,5g q6h in 4h</td></tr>
+                                <tr><td>Cefepime</td><td>2g in 30'</td><td>2g q8h in 3h</td></tr>
+                                <tr><td>Meropenem</td><td>1-2g in 30'</td><td>1-2g q8h in 3h</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">💊 Vancomicina</div>
+                        <div class="drug-info">
+                            <strong>Intermittente:</strong> Carico 20-30mg/kg (max 3g), poi 15-20mg/kg q12h (max 2g)
+                        </div>
+                        <div class="drug-info">
+                            <strong>Continua (richiede CVC):</strong> Carico 15-20mg/kg, poi 30-40mg/kg/24h
+                        </div>
+                        <div class="warning-box">
+                            <strong>TDM obbligatorio!</strong> Prelievo valle 48-72h dopo inizio. Target: S.aureus invasivo 15-20mg/L (intermittente) o 20-25mg/L (continua). Altre infezioni: 10-20mg/L
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">💊 Caspofungina</div>
+                        <ul>
+                            <li>Standard: 70mg I° dose, poi 50mg/die</li>
+                            <li>Peso >80kg: continuare 70mg/die</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">ℹ️ Note Speciali</div>
+                        <ul>
+                            <li><strong>Pesi estremi/IRC:</strong> consultare materiale farmaci, nefrologo, farmacista, infettivologo</li>
+                            <li><strong>Settico senza IRC:</strong> posologie standard 24-48h anche con IRA, poi rivalutare</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleAccordion(el) {
+            const content = el.nextElementSibling;
+            const isActive = el.classList.contains('active');
+            
+            document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('active'));
+            document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('active'));
+            
+            if (!isActive) {
+                el.classList.add('active');
+                content.classList.add('active');
+            }
+        }
+
+        function filterInfections() {
+            const term = document.getElementById('searchInfection').value.toLowerCase();
+            document.querySelectorAll('.infection-item').forEach(item => {
+                const data = item.getAttribute('data-infection');
+                item.style.display = (data.includes(term) || term === '') ? 'block' : 'none';
+            });
+        }
+
+        document.getElementById('news2Form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const score = ['respRate','spo2','o2therapy','sysBP','heartRate','consciousness','temp']
+                .reduce((sum, id) => sum + parseInt(document.getElementById(id).value), 0);
+            
+            const resultDiv = document.getElementById('news2Result');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const interpretation = document.getElementById('scoreInterpretation');
+            
+            resultDiv.style.display = 'block';
+            scoreDisplay.textContent = 'NEWS2: ' + score;
+            
+            let cls, txt, action;
+            if (score === 0) {
+                cls = 'score-low'; txt = 'BASSO'; action = 'Monitoraggio routine';
+            } else if (score <= 4) {
+                cls = 'score-low'; txt = 'BASSO-MEDIO'; action = 'Aumentare monitoraggio';
+            } else if (score <= 6) {
+                cls = 'score-medium'; txt = 'MEDIO'; action = 'Valutazione urgente';
+            } else {
+                cls = 'score-high'; txt = 'ALTO'; action = '⚠️ EMERGENZA - Valutazione immediata';
+            }
+            
+            scoreDisplay.className = 'score-result ' + cls;
+            interpretation.innerHTML = `<div class="${score>=5?'danger':'info'}-box"><h4>${txt}</h4><p>${action}</p><p><strong>${score>=5?'SEVERO (NEWS2≥5)':'NON SEVERO (NEWS2<5)'}</strong> per schemi ATB</p></div>`;
+            resultDiv.scrollIntoView({behavior:'smooth', block:'nearest'});
+        });
+
+        function setupRisk(cls, id) {
+            const cbs = document.querySelectorAll('.' + cls);
+            const res = document.getElementById(id);
+            cbs.forEach(cb => cb.addEventListener('change', () => {
+                res.style.display = Array.from(cbs).some(c => c.checked) ? 'block' : 'none';
+            }));
+        }
+
+        ['mrsa','esbl','pseudo','candida'].forEach(r => setupRisk('risk-'+r, 'result-'+r));
+
+        console.log('Webapp Terapia Antibiotica caricata!');
+    </script>
+</body>
+</html>
